@@ -9,7 +9,7 @@ export default function Index() {
   
   const handleLogin = async () => { 
     try {
-        const response = await axios.post('http://10.0.2.2:3000/server', { email, password });
+        const response = await axios.post('http://10.0.2.2:3000/server', { email, password });// cuando usas un emulador solo reconoce el 10.0.2.2
         if (response.data.success) {
             // Navega a la página de inicio o guarda el token de usuario
             console.log('Login successful');
