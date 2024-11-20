@@ -1,74 +1,117 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import React, { useState } from 'react';
+import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { Link } from 'expo-router';
+import axios from 'axios';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+export default function Index() {
+  const [email, setEmail] = useState(''); 
+  const [password, setPassword] = useState('');
+  
+  const handleLogin = async () => { 
+    try {
+        const response = await axios.post('http://10.0.2.2:3000/server', { email, password });
+        if (response.data.success) {
+            // Navega a la página de inicio o guarda el token de usuario
+            console.log('Login successful');
+        } else {
+            Alert.alert('Error', 'Correo electrónico o contraseña incorrectos');
+        }
+    } catch (error) {
+        console.error('Error logging in:', error);
+        Alert.alert('Error', 'Ocurrió un error durante el inicio de sesión');
+    }
+};
 
-export default function HomeScreen() {
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12'
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <View style={styles.container}>
+      <Image
+        source={require('./../../assets/images/img/LogoMexshoes.png')}
+        style={styles.image}
+      />
+      <Text style={styles.titulo}> Bienvenido</Text>
+      <Text style={styles.subtitulo}>Inicie sesión</Text>
+      <TextInput 
+        style={styles.input} 
+        placeholder="Correo electrónico" 
+        value={email} 
+        onChangeText={setEmail} 
+        keyboardType="email-address" 
+        autoCapitalize="none" 
+        autoCorrect={false} /> 
+      <TextInput 
+        style={styles.input} 
+        placeholder="Contraseña" 
+        value={password} 
+        onChangeText={setPassword} 
+        secureTextEntry 
+        autoCapitalize="none" 
+        autoCorrect={false} />
+      
+      <TouchableOpacity 
+        style={styles.button}
+        onPress={handleLogin}>
+          <Link href="/home" style={styles.buttonText}>
+          <Text style={styles.buttonText}>
+          Iniciar Sesion
+        </Text>
+      </Link>
+        
+      </TouchableOpacity>
+      <Link href="/signup" style={styles.buttonText}>
+        Aún no tienes cuenta?
+      </Link>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
+  container: {
+    flex: 1,
+    backgroundColor: '#f1f1f1',
     alignItems: 'center',
-    gap: 8,
+    justifyContent: 'center',
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  titulo: {
+    fontSize: 60,
+    fontWeight: 'bold',
+    color: '#34434D'
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  subtitulo: {
+    fontSize: 25,
+    color: 'gray',
   },
+  input: {
+    borderWidth: 1,
+    borderColor: 'gray',
+    padding: 10,
+    paddingStart: 50,
+    width: '80%',
+    height: 50,
+    marginTop: 20,
+    borderRadius: 10,
+    backgroundColor: '#fff',
+  },
+  image: {
+    width: 200,
+    height: 200,
+  },
+  forgotPassword: {
+    fontSize: 14,
+    color: 'black',
+    marginTop: 20,
+    fontWeight: 'normal'
+  },
+  button:{
+    backgroundColor:'#D3D3D3',
+    marginTop: 20,
+    padding:10,
+    paddingStart:10,
+    borderRadius:10,
+  },
+  buttonText:{
+    color:'#00000',
+    fontSize:18,
+    fontWeight:'bold',
+  }
 });
